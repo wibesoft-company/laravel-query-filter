@@ -1,5 +1,5 @@
 {
-    "name": "wibesoft-company/query-filter",
+    "name": "wibesoft-company/laravel-query-filter",
     "description": "Laravel package for filtering resources with request query string",
     "keywords": [
         "query",

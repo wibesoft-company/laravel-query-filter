@@ -98,7 +98,11 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     {
         $builder->orWhere(function ($query) use ($column, $text) {
             foreach (explode(' ', $text) as $word) {
-                $query->where($column, 'like', "%{$word}%");
+                if (\config('database.default') == 'pgsql') {
+                    $query->where($column, 'ilike', "%{$word}%");
+                } else {
+                    $query->where($column, 'like', "%{$word}%");
+                }
             }
         });
 

@@ -3,6 +3,7 @@
 namespace Ambengers\QueryFilter;
 
 use Ambengers\QueryFilter\Exceptions\MissingLoaderClassException;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -19,11 +20,12 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      */
     public function load($relations = null)
     {
-        if (! $relations) {
+
+        if (!$relations) {
             return $this->builder;
         }
 
-        if (! $this->loader) {
+        if (!$this->loader) {
             throw new MissingLoaderClassException(
                 'Loader class is not defined on this filter instance.'
             );
@@ -52,7 +54,8 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      */
     public function search($text = null)
     {
-        if (! $text || ! $this->searchableColumns) {
+
+        if (!$text || !$this->searchableColumns) {
             return $this->builder;
         }
 
@@ -74,6 +77,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      */
     protected function performSearch(Builder $builder, $text)
     {
+
         foreach ($this->searchableColumns as $attribute => $value) {
             // If the value is an array, that means we want to search through a relationship.
             // We need to make sure that we send through the closure's query instance so we
@@ -120,6 +124,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      */
     protected function performRelationSearch(Builder $builder, $related, $columns, $text)
     {
+
         $columns = is_array($columns) ? $columns : [$columns];
 
         $callback = function ($query) use ($columns, $text) {
@@ -159,6 +164,18 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     }
 
     /**
+     * Sort a filtered result.
+     */
+    protected function sortQuery(Builder $query): Builder
+    {
+        $sorting = explode('|', $this->input('sort'));
+
+
+        return $query->orderBy($sorting[0], $sorting[1]);
+    }
+
+
+    /**
      * Get the paginated results after applying the filters.
      *
      * @param  Builder  $builder
@@ -166,7 +183,11 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      */
     public function getPaginated(Builder $builder)
     {
-        $result = $this->apply($builder)->get();
+
+
+        $result = $this->apply($builder);
+
+        # \dd($result->count());
 
         return $this->paginate(
             $result,
@@ -181,17 +202,17 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
      * @param  Illuminate\Database\Eloquent\Builder  $builder
      * @return Illuminate\Support\Collection
      */
-    public function paginate($items, $perPage = 15, $page = null, $options = [])
+    public function paginate(Builder $items, $perPage = 15, $page = null, $options = [])
     {
+        $countQuery = clone $items;
+        $getQuery = clone $items;
+
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-
-        $items = $items instanceof Collection ? $items : Collection::make($items);
-
-        $items = $this->shouldSort() ? $this->sortCollection($items) : $items;
+        $query = $this->shouldSort() ? $this->sortQuery($getQuery) : $getQuery;
 
         return new LengthAwarePaginator(
-            $items->forPage($page, $perPage),
-            $items->count(),
+            $query->skip(($page - 1) * $perPage)->take($perPage)->get(),
+            $countQuery->count(),
             $perPage,
             $page,
             $options

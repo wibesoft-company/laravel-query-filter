@@ -116,4 +116,6 @@ trait HasParameters
 
         return ! is_bool($value) && ! is_array($value) && trim((string) $value) === '';
     }
+
+    public function getFilterColumns() { return $this->filters; }
 }

@@ -18,7 +18,7 @@ class QueryFilterServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/query_filter.php' => config_path('query_filter.php'),
+            __DIR__ . '/../config/query_filter.php' => config_path('query_filter.php'),
         ], 'query-filter-config');
 
         $this->bootEloquentFilterMacro();
@@ -32,7 +32,7 @@ class QueryFilterServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/query_filter.php',
+            __DIR__ . '/../config/query_filter.php',
             'query-filter-config'
         );
 
@@ -57,9 +57,7 @@ class QueryFilterServiceProvider extends ServiceProvider
                 return $filters->getFilteredModel($this);
             }
 
-            if ($filters->shouldPaginate()) {
-                return $filters->getPaginated($this);
-            }
+            return $filters->getPaginated($this);
 
             return $filters->getFilteredModelCollection($this);
         });

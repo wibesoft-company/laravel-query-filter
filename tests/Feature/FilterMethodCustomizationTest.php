@@ -52,11 +52,7 @@ class FilterMethodCustomizationTest extends FeatureTest
             if ($filters instanceof AbstractQueryLoader) {
                 return $filters->getFilteredModel($this);
             }
-
-            if ($filters->shouldPaginate()) {
-                return $filters->getPaginated($this);
-            }
-
+            return $filters->getPaginated($this);
             return $filters->getFilteredModelCollection($this);
         });
     }

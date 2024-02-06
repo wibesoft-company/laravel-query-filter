@@ -210,6 +210,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $query = $this->shouldSort() ? $this->sortQuery($getQuery) : $getQuery;
 
+
         return new LengthAwarePaginator(
             $query->skip(($page - 1) * $perPage)->take($perPage)->get(),
             $countQuery->count(),
@@ -228,15 +229,4 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     {
         return $this->filled('sort');
     }
-
-    /**
-     * Determine if any pagination parameter is present in query string.
-     *
-     * @return bool
-     */
-    public function shouldPaginate()
-    {
-        return $this->has('page') || $this->has('per_page');
-    }
-
 }

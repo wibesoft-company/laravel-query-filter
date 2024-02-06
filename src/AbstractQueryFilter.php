@@ -238,4 +238,9 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     {
         return $this->has('page') || $this->has('per_page');
     }
+
+    public function getFilterColumns()
+    {
+        return $this->filters;
+    }
 }

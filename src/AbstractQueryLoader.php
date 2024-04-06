@@ -14,6 +14,11 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
      */
     protected $loadables = [];
 
+    public function getLoadables()
+    {
+        return empty($this->loadables) ? null : $this->loadables;
+    }
+
     /**
      * Set the builder instance.
      *
@@ -35,7 +40,7 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
      */
     public function load($relations = '')
     {
-        if (! $relations) {
+        if (!$relations) {
             return $this->builder;
         }
 

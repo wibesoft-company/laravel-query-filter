@@ -12,6 +12,17 @@ use Illuminate\Support\Collection;
 
 abstract class AbstractQueryFilter extends RequestQueryBuilder
 {
+
+
+
+    public function getLoader()
+    {
+        if (!$this->loader) {
+            return null;
+        }
+
+        return new $this->loader($this->request);
+    }
     /**
      * Perform a lazy/eager load from query string.
      *

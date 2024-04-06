@@ -16,7 +16,7 @@ abstract class AbstractQueryLoader extends RequestQueryBuilder
 
     public function getLoadables()
     {
-        return empty($this->loadables) ? null : $this->loadables;
+        return empty($this->loadables) ? [] : $this->loadables;
     }
 
     /**

@@ -15,8 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.1|^8.0",
-        "reedware/laravel-relation-joins": "dev-master"
+        "php": "^7.1|^8.0"
     },
     "require-dev": {
         "mockery/mockery": "~1.0",

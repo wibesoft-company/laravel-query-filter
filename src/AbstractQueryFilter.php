@@ -181,6 +181,12 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
     {
         $sorting = explode('|', $this->input('sort'));
 
+        $relations = \explode('.', $sorting[0]);
+        unset($relations[\count($relations) - 1]);
+        if (\count($relations) > 0) {
+            $query = $query->joinRelation(\implode('.', $relations) . ' as ' . \implode('.', $relations));
+        }
+
 
         return $query->orderBy($sorting[0], $sorting[1]);
     }

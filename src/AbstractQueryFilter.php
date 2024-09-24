@@ -185,7 +185,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
         if (\count($requestRelations) > 1) {
             $relations = array_slice($requestRelations, 0, -1);
             $columnName = 'sort_' . end($requestRelations);
-            $query->withCount([\implode('.', $relations) . ' as ' . $columnName => fn ($q) => $q->select(\end($requestRelations))->limit(1)]);
+            $query->withCount([\implode('.', $relations) . ' as ' . $columnName => fn($q) => $q->select(\end($requestRelations))->limit(1)]);
             $sorting[0] = $columnName;
         }
 
@@ -226,6 +226,7 @@ abstract class AbstractQueryFilter extends RequestQueryBuilder
         $getQuery = clone $items;
 
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $page = intval($page);
         $query = $this->shouldSort() ? $this->sortQuery($getQuery) : $getQuery;
 
 
